@@ -1,0 +1,560 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BinaryLab | Booth Multiplier</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+font-family:Arial,sans-serif;
+background:#f3f6f8;
+color:#253443;
+}
+.layout{display:flex;min-height:100vh}
+.sidebar{
+width:245px;
+background:#173b46;
+color:white;
+padding:30px 18px;
+position:fixed;
+height:100vh;
+}
+.brand{font-size:23px;font-weight:bold;color:#f4b860;margin-bottom:8px}
+.brand-sub{font-size:12px;color:#bdd0d3;margin-bottom:45px}
+.side-title{font-size:11px;color:#91afb4;text-transform:uppercase;margin:22px 10px 10px}
+.sidebar a{
+display:block;
+padding:13px 12px;
+border-radius:7px;
+text-decoration:none;
+color:#d8e5e6;
+margin:5px 0;
+font-size:14px;
+}
+.sidebar a:hover{background:#285762;color:white}
+.main{margin-left:245px;width:calc(100% - 245px)}
+.topbar{
+padding:20px 5%;
+background:white;
+border-bottom:1px solid #dce4e7;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+.topbar span{font-size:13px;color:#75858c}
+.tag{
+background:#e0f2ed;
+color:#18765e;
+padding:7px 12px;
+border-radius:20px;
+font-size:12px;
+font-weight:bold;
+}
+.hero{
+background:#e2efeb;
+padding:55px 6%;
+}
+.hero small{color:#16836c;font-weight:bold;letter-spacing:2px}
+.hero h1{font-size:clamp(29px,4vw,43px);margin:12px 0;color:#173b46}
+.hero h1 span{color:#16836c}
+.hero p{max-width:700px;color:#587078;line-height:1.8}
+.hero button{
+margin-top:22px;
+padding:13px 22px;
+background:#16836c;
+color:white;
+border:0;
+border-radius:6px;
+cursor:pointer;
+font-weight:bold;
+}
+.content{padding:35px 5%;max-width:1250px;margin:auto}
+.section-head{margin-bottom:20px}
+.section-head small{color:#16836c;font-weight:bold}
+.section-head h2{font-size:25px;margin-top:5px;color:#173b46}
+.card{
+background:white;
+padding:25px;
+border:1px solid #e0e7e9;
+border-radius:11px;
+margin-bottom:25px;
+box-shadow:0 3px 12px rgba(24,54,65,.035);
+}
+.card h3{color:#225866;margin-bottom:16px}
+.card p{line-height:1.8;color:#63767e}
+.input-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+label{display:block;font-size:13px;font-weight:bold;margin-bottom:8px;color:#49616a}
+input,select{
+width:100%;
+padding:13px;
+border:1px solid #d4dfe2;
+border-radius:6px;
+background:#f8fafb;
+color:#253443;
+margin-bottom:17px;
+font-size:15px;
+outline-color:#16836c;
+}
+button{cursor:pointer}
+.btn{
+border:0;
+padding:12px 20px;
+border-radius:6px;
+font-weight:bold;
+margin:4px;
+}
+.green{background:#16836c;color:white}
+.grey{background:#e7edef;color:#3f5a62}
+.orange{background:#f4b860;color:#46351a}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.rules{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:12px;
+}
+.rule{
+background:#f4f8f7;
+padding:17px;
+border-radius:7px;
+border-bottom:3px solid #16836c;
+}
+.rule b{font-size:21px;color:#16836c}
+.rule p{font-size:13px;margin-top:6px}
+.registers{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:13px;
+margin:20px 0;
+}
+.reg{
+background:#edf5f3;
+border-radius:8px;
+padding:18px 5px;
+text-align:center;
+border:1px solid #d5e8e2;
+}
+.reg label{color:#16836c}
+.reg strong{
+font-size:22px;
+letter-spacing:1px;
+color:#173b46;
+overflow-wrap:anywhere;
+}
+.status{
+background:#fff6e8;
+border-left:4px solid #e7a33d;
+padding:18px;
+border-radius:5px;
+margin-top:15px;
+}
+.status h3{color:#a66c19;margin-bottom:8px}
+.status p{margin:4px 0;color:#67573e}
+.controls{text-align:center;margin-top:20px}
+.table-box{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:580px;margin-top:10px}
+th,td{padding:13px;text-align:center;border-bottom:1px solid #e2e8ea;font-size:13px}
+th{background:#e8f2ef;color:#225866}
+.result{
+background:#e1f4e9;
+border:1px solid #a7d9b9;
+padding:25px;
+text-align:center;
+border-radius:9px;
+margin-top:20px;
+}
+.result h2{color:#18784e;font-size:30px;margin:10px}
+.flowchart{display:flex;flex-direction:column;align-items:center;gap:7px;padding:15px}
+.node{
+width:min(90%,350px);
+padding:14px;
+background:#edf5f3;
+border:1px solid #8abeb1;
+text-align:center;
+border-radius:7px;
+font-size:14px;
+font-weight:bold;
+}
+.startend{background:#d8eee6;border-radius:30px;width:180px}
+.decision{
+width:220px;
+background:#fff1d9;
+border-color:#e7b45f;
+transform:rotate(0deg);
+}
+.arrow{color:#16836c;font-size:23px}
+.flow-note{font-size:12px;color:#b07823}
+footer{
+background:#173b46;
+color:#d5e4e5;
+text-align:center;
+padding:25px;
+font-size:13px;
+}
+.hidden{display:none}
+@media(max-width:800px){
+.sidebar{width:65px;padding:20px 8px}
+.brand{font-size:12px;overflow-wrap:anywhere}
+.brand-sub,.side-title{display:none}
+.sidebar a{font-size:0;text-align:center;padding:15px 2px}
+.sidebar a::first-letter{font-size:17px}
+.main{margin-left:65px;width:calc(100% - 65px)}
+.rules{grid-template-columns:1fr 1fr}
+}
+@media(max-width:550px){
+.input-grid{grid-template-columns:1fr}
+.registers{grid-template-columns:1fr 1fr}
+.content{padding:25px 4%}
+.card{padding:17px}
+.topbar{padding:15px}
+}
+</style>
+</head>
+
+<body>
+<div class="layout">
+
+<aside class="sidebar">
+<div class="brand">BinaryLab.</div>
+<div class="brand-sub">COMPUTER ARCHITECTURE LAB</div>
+
+<div class="side-title">Workspace</div>
+<a href="#home">⌂ &nbsp; Overview</a>
+<a href="#theory">▤ &nbsp; Theory</a>
+<a href="#simulator">⚙ &nbsp; Simulator</a>
+<a href="#flowchart">◇ &nbsp; Flowchart</a>
+<a href="#history-section">▦ &nbsp; Results</a>
+
+<div class="side-title">Project</div>
+<a href="#about-project">ⓘ &nbsp; About</a>
+</aside>
+
+<main class="main">
+
+<div class="topbar">
+<strong>Computer Organization / COA</strong>
+<span class="tag">LAB MODULE 01</span>
+</div>
+
+<section class="hero" id="home">
+<small>COMPUTER ARITHMETIC SIMULATION</small>
+<h1>Booth <span>Multiplier</span></h1>
+<p>Explore signed binary multiplication through an interactive register-level simulation. Observe arithmetic operations, shifting and the final product in real time.</p>
+<button onclick="document.getElementById('simulator').scrollIntoView()">Open Simulator →</button>
+</section>
+
+<div class="content" id="theory">
+
+<div class="section-head">
+<small>01 / CONCEPT</small>
+<h2>Algorithm Overview</h2>
+</div>
+
+<div class="card">
+<h3>What is Booth's Algorithm?</h3>
+<p>Booth's algorithm is a signed binary multiplication technique used in digital computers. It uses 2's complement arithmetic and checks two adjacent bits of the multiplier to decide whether addition, subtraction or no operation is required.</p>
+<br>
+<h3>Decision Table</h3>
+<div class="rules">
+<div class="rule"><b>00</b><p>No operation</p></div>
+<div class="rule"><b>01</b><p>Add M to A</p></div>
+<div class="rule"><b>10</b><p>Subtract M from A</p></div>
+<div class="rule"><b>11</b><p>No operation</p></div>
+</div>
+<br>
+<p>Following the selected operation, an arithmetic right shift is applied to the combined A, Q and Q-1 registers. The process continues for n iterations.</p>
+</div>
+
+</div>
+
+<div class="content" id="simulator">
+
+<div class="section-head">
+<small>02 / EXECUTION</small>
+<h2>Multiplication Workspace</h2>
+</div>
+
+<div class="card">
+<h3>Operand Configuration</h3>
+
+<div class="input-grid">
+<div>
+<label>Multiplicand M (Binary)</label>
+<input id="mInput" placeholder="e.g. 0101">
+</div>
+<div>
+<label>Multiplier Q (Binary)</label>
+<input id="qInput" placeholder="e.g. 0011">
+</div>
+</div>
+
+<label>Register Width</label>
+<select id="bitSize">
+<option value="4">4 Bits</option>
+<option value="5">5 Bits</option>
+<option value="8">8 Bits</option>
+</select>
+
+<button class="btn green" onclick="startSimulation()">Initialize & Run</button>
+<button class="btn grey" onclick="resetSimulation()">Clear All</button>
+<p id="error" style="color:#c0392b;margin-top:10px"></p>
+</div>
+
+<div id="simulationArea" class="hidden">
+
+<div class="card">
+<h3>Live Register Monitor</h3>
+
+<div class="registers">
+<div class="reg"><label>ACCUMULATOR A</label><strong id="regA">0000</strong></div>
+<div class="reg"><label>MULTIPLIER Q</label><strong id="regQ">0000</strong></div>
+<div class="reg"><label>EXTRA BIT Q-1</label><strong id="regQ1">0</strong></div>
+<div class="reg"><label>MULTIPLICAND M</label><strong id="regM">0000</strong></div>
+</div>
+
+<div class="status">
+<h3 id="currentOperation">System Ready</h3>
+<p id="iteration">Iteration: 0</p>
+<p id="bitPair">Bit Pair: -</p>
+<p id="operationDetail"></p>
+</div>
+
+<div class="controls">
+<button class="btn green" id="nextBtn" onclick="nextStep()">Next Operation →</button>
+<button class="btn orange" onclick="resetSimulation()">Restart</button>
+</div>
+</div>
+
+<div class="card" id="history-section">
+<h3>Execution Log</h3>
+<div class="table-box">
+<table>
+<thead>
+<tr>
+<th>Cycle</th><th>Q₀ Q-1</th><th>Operation</th><th>A</th><th>Q</th><th>Q-1</th>
+</tr>
+</thead>
+<tbody id="history"></tbody>
+</table>
+</div>
+</div>
+
+<div class="result hidden" id="finalResult">
+<h3>COMPUTATION COMPLETE</h3>
+<h2 id="binaryResult"></h2>
+<p id="decimalResult"></p>
+</div>
+
+</div>
+</div>
+
+<div class="content" id="flowchart">
+<div class="section-head">
+<small>03 / LOGIC DESIGN</small>
+<h2>Algorithm Flowchart</h2>
+</div>
+
+<div class="card">
+<div class="flowchart">
+<div class="node startend">START</div>
+<div class="arrow">↓</div>
+<div class="node">Input M and Q</div>
+<div class="arrow">↓</div>
+<div class="node">Initialize A = 0, Q-1 = 0, Count = n</div>
+<div class="arrow">↓</div>
+<div class="node">Examine Q₀ and Q-1</div>
+<div class="arrow">↓</div>
+<div class="node decision">Identify bit combination</div>
+<div class="node">01: A = A + M<br>10: A = A - M<br>00 / 11: No operation</div>
+<div class="arrow">↓</div>
+<div class="node">Arithmetic Right Shift</div>
+<div class="arrow">↓</div>
+<div class="node">Count = Count - 1</div>
+<div class="arrow">↓</div>
+<div class="node decision">Count = 0 ?</div>
+<div class="flow-note">NO → Repeat the bit examination</div>
+<div class="arrow">↓ YES</div>
+<div class="node">Product = A concatenated with Q</div>
+<div class="arrow">↓</div>
+<div class="node startend">END</div>
+</div>
+</div>
+</div>
+
+<div class="content" id="about-project">
+<div class="card">
+<h3>Project Information</h3>
+<p><strong>Subject:</strong> Computer Organization and Architecture</p>
+<p><strong>Topic:</strong> Booth's Multiplication Algorithm</p>
+<p><strong>Purpose:</strong> To demonstrate signed binary multiplication using an interactive software simulation.</p>
+<br>
+<h3>Advantages</h3>
+<p>• Supports signed binary operands.</p>
+<p>• Reduces repetitive arithmetic operations.</p>
+<p>• Uses 2's complement representation.</p>
+<p>• Demonstrates arithmetic register shifting.</p>
+</div>
+</div>
+
+<footer>
+<p>BinaryLab | Booth's Multiplication Simulator</p>
+<p>Computer Organization and Architecture Project</p>
+</footer>
+
+</main>
+</div>
+
+<script>
+let state=null,steps=[],currentStep=0;
+
+function toBits(v,n){
+return (v&((1n<<BigInt(n))-1n)).toString(2).padStart(n,"0");
+}
+
+function signedValue(v,n){
+let sign=1n<<BigInt(n-1);
+return v>=sign?v-(1n<<BigInt(n)):v;
+}
+
+function startSimulation(){
+
+let mText=document.getElementById("mInput").value.trim();
+let qText=document.getElementById("qInput").value.trim();
+let n=Number(document.getElementById("bitSize").value);
+let error=document.getElementById("error");
+error.textContent="";
+
+if(!/^[01]+$/.test(mText)||!/^[01]+$/.test(qText)){
+error.textContent="Please enter valid binary numbers.";
+return;
+}
+if(mText.length!==n||qText.length!==n){
+error.textContent="Both operands must contain exactly "+n+" bits.";
+return;
+}
+
+let M=BigInt("0b"+mText),Q=BigInt("0b"+qText);
+let min=-(1n<<BigInt(n-1)),max=(1n<<BigInt(n-1))-1n;
+
+if(signedValue(M,n)<min||signedValue(M,n)>max||
+signedValue(Q,n)<min||signedValue(Q,n)>max){
+error.textContent="Number outside signed range.";
+return;
+}
+
+let mask=(1n<<BigInt(n))-1n;
+state={n,M,A:0n,Q,Q1:0n};
+steps=[{iteration:0,pair:"-",operation:"Initialize",A:0n,Q,Q1:0n}];
+
+for(let i=1;i<=n;i++){
+
+let pair=Number((state.Q&1n)*2n+state.Q1);
+let operation="No operation";
+
+if(pair===1){
+state.A=(state.A+state.M)&mask;
+operation="A = A + M";
+}else if(pair===2){
+state.A=(state.A-state.M)&mask;
+operation="A = A - M";
+}
+
+let totalBits=2*n+1;
+let totalMask=(1n<<BigInt(totalBits))-1n;
+let combined=(state.A<<BigInt(n+1))|(state.Q<<1n)|state.Q1;
+let signBit=1n<<BigInt(totalBits-1);
+
+if((combined&signBit)!==0n){
+combined-=1n<<BigInt(totalBits);
+}
+combined>>=1n;
+combined&=totalMask;
+
+state.Q1=combined&1n;
+state.Q=(combined>>1n)&mask;
+state.A=(combined>>BigInt(n+1))&mask;
+
+steps.push({
+iteration:i,
+pair:pair.toString(2).padStart(2,"0"),
+operation:operation+" + Arithmetic Right Shift",
+A:state.A,Q:state.Q,Q1:state.Q1
+});
+}
+
+currentStep=0;
+document.getElementById("simulationArea").classList.remove("hidden");
+document.getElementById("finalResult").classList.add("hidden");
+
+let history=document.getElementById("history");
+history.innerHTML="";
+
+steps.forEach(s=>{
+let row=document.createElement("tr");
+[s.iteration,s.pair,s.operation,toBits(s.A,n),toBits(s.Q,n),s.Q1.toString()].forEach(v=>{
+let td=document.createElement("td");
+td.textContent=v;
+row.appendChild(td);
+});
+history.appendChild(row);
+});
+
+showStep();
+document.getElementById("simulationArea").scrollIntoView({behavior:"smooth"});
+}
+
+function showStep(){
+
+let s=steps[currentStep],n=state.n;
+
+document.getElementById("regA").textContent=toBits(s.A,n);
+document.getElementById("regQ").textContent=toBits(s.Q,n);
+document.getElementById("regQ1").textContent=s.Q1;
+document.getElementById("regM").textContent=toBits(state.M,n);
+
+document.getElementById("currentOperation").textContent=s.operation;
+document.getElementById("iteration").textContent="Iteration: "+s.iteration+" / "+n;
+document.getElementById("bitPair").textContent="Q₀ Q-1: "+s.pair;
+document.getElementById("operationDetail").textContent=
+s.iteration===0?"Initial register configuration.":"Arithmetic operation and right shift completed.";
+
+let done=currentStep===steps.length-1;
+document.getElementById("nextBtn").disabled=done;
+document.getElementById("nextBtn").textContent=done?"COMPLETED":"Next Operation →";
+
+if(done)showResult();
+else document.getElementById("finalResult").classList.add("hidden");
+}
+
+function nextStep(){
+if(currentStep<steps.length-1){
+currentStep++;
+showStep();
+}
+}
+
+function showResult(){
+let n=state.n;
+let product=(state.A<<BigInt(n))|state.Q;
+document.getElementById("binaryResult").textContent=toBits(product,2*n);
+document.getElementById("decimalResult").textContent=
+"Decimal Product: "+signedValue(product,2*n).toString();
+document.getElementById("finalResult").classList.remove("hidden");
+}
+
+function resetSimulation(){
+state=null;steps=[];currentStep=0;
+document.getElementById("simulationArea").classList.add("hidden");
+document.getElementById("finalResult").classList.add("hidden");
+document.getElementById("history").innerHTML="";
+document.getElementById("error").textContent="";
+document.getElementById("mInput").value="";
+document.getElementById("qInput").value="";
+}
+</script>
+
+</body>
+</html>
